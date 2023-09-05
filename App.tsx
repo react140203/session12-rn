@@ -7,7 +7,7 @@
 
 import React from 'react';
 import type {PropsWithChildren} from 'react';
-import notifee from '@notifee/react-native';
+import notifee, {TimestampTrigger, TriggerType} from '@notifee/react-native';
 import {
   Button,
   SafeAreaView,
@@ -61,29 +61,32 @@ function App(): JSX.Element {
   async function onDisplayNotification() {
     // Request permissions (required for iOS)
     try {
-      const permission = await notifee.requestPermission();
-      console.log('---->', permission);
+      await notifee.requestPermission();
 
       const channelId = await notifee.createChannel({
         id: 'default',
         name: 'Default Channel',
       });
 
-      console.log('---->>', channelId);
+      const date = new Date(Date.now());
+      date.setMinutes(date.getMinutes() + 1);
+
+      const trigger: TimestampTrigger = {
+        type: TriggerType.TIMESTAMP,
+        timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
+      };
 
       // Display a notification
-      await notifee.displayNotification({
-        title: 'Notification Title',
-        body: 'Main body content of the notification',
-        android: {
-          channelId,
-          //smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
-          // pressAction is needed if you want the notification to open the app when pressed
-          pressAction: {
-            id: 'default',
+      await notifee.createTriggerNotification(
+        {
+          title: 'Meeting with Jane',
+          body: 'قرص ....',
+          android: {
+            channelId: channelId,
           },
         },
-      });
+        trigger,
+      );
     } catch (e) {
       console.log(e);
     }
