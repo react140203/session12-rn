@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import notifee, {TimestampTrigger, TriggerType} from '@notifee/react-native';
 import {
@@ -26,6 +26,33 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import messaging from '@react-native-firebase/messaging';
+
+async function onMessageReceived(message: any) {
+  /* {"collapseKey": "com.session12", "data": {}, 
+  "from": "752725737853", "messageId": "0:1693932827632619%017ee30a017ee30a", 
+  "notification": {"android": {}, "body": "Test", "title": "Salam"}, 
+  "sentTime": 1693932827610, "ttl": 2419200}*/
+  console.log(typeof message);
+  const channelId = await notifee.createChannel({
+    id: 'default',
+    name: 'Default Channel',
+  });
+
+  await notifee.displayNotification({
+    title: message.notification.title,
+    body: message.notification.body,
+    android: {
+      channelId,
+      pressAction: {
+        id: 'default',
+      },
+    },
+  });
+}
+
+messaging().onMessage(onMessageReceived);
+messaging().setBackgroundMessageHandler(onMessageReceived);
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -58,6 +85,13 @@ function Section({children, title}: SectionProps): JSX.Element {
 }
 
 function App(): JSX.Element {
+  useEffect(() => {
+    (async () => {
+      await messaging().registerDeviceForRemoteMessages();
+      const token = await messaging().getToken();
+      console.log('token:', token);
+    })();
+  }, []);
   async function onDisplayNotification() {
     // Request permissions (required for iOS)
     try {
