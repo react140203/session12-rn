@@ -7,7 +7,9 @@
 
 import React from 'react';
 import type {PropsWithChildren} from 'react';
+import notifee from '@notifee/react-native';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -56,6 +58,38 @@ function Section({children, title}: SectionProps): JSX.Element {
 }
 
 function App(): JSX.Element {
+  async function onDisplayNotification() {
+    // Request permissions (required for iOS)
+    try {
+      const permission = await notifee.requestPermission();
+      console.log('---->', permission);
+
+      const channelId = await notifee.createChannel({
+        id: 'default',
+        name: 'Default Channel',
+      });
+
+      console.log('---->>', channelId);
+
+      // Display a notification
+      await notifee.displayNotification({
+        title: 'Notification Title',
+        body: 'Main body content of the notification',
+        android: {
+          channelId,
+          //smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+          // pressAction is needed if you want the notification to open the app when pressed
+          pressAction: {
+            id: 'default',
+          },
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
+    // Create a channel (required for Android)
+  }
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -72,6 +106,10 @@ function App(): JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <Header />
+        <Button
+          title="Display Notification"
+          onPress={() => onDisplayNotification()}
+        />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
