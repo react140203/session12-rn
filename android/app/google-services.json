@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "752725737853",
+    "project_id": "drugreminder-87b0e",
+    "storage_bucket": "drugreminder-87b0e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752725737853:android:6ae994f6fb529a116fcc14",
+        "android_client_info": {
+          "package_name": "com.session12"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752725737853-lhkhr99ar5c50vj3kcicl2ei9juidl3h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCucyRDVZqKXeYW7DPJflmXNecYWh96Us"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752725737853-lhkhr99ar5c50vj3kcicl2ei9juidl3h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
